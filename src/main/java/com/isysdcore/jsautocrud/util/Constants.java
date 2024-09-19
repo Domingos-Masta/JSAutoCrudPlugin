@@ -1,4 +1,4 @@
-package com.isysdcore.jsautocrud.springautocrudclassgenerator;
+package com.isysdcore.jsautocrud.util;
 
 /**
  * @author domingos.fernando
@@ -6,8 +6,11 @@ package com.isysdcore.jsautocrud.springautocrudclassgenerator;
  * @project SpringAutoCrudClassGenerator
  */
 public class Constants {
-    public static final String ENTITY_CC_PLACEHOLDER = "<Entity>";
+    public static final String F_NAME_KEY = "FNAME";
+    public static final String F_CONTENT_KEY = "FCONTENT";
+    public static final String ENTITY_CC_PLACEHOLDER = "<ENTITY>";
     public static final String ENTITY_LC_PLACEHOLDER = "<entity>";
+    public static final String ENTITY_ID_PLACEHOLDER = "<ID>";
     public static final String CLASS_EXTENSION = ".java";
     public static final String REPOSITORY_NAME = "Repository";
     public static final String SERVICE_NAME = "ServiceImpl";
@@ -29,7 +32,7 @@ public class Constants {
             "@Data\n" +
             "@EqualsAndHashCode(callSuper = true)\n" +
             "@NoArgsConstructor\n" +
-            "public class  <Entity>  extends GenericEntity<UUID> {\n" +
+            "public class "+ENTITY_CC_PLACEHOLDER+"  extends GenericEntity<"+ENTITY_ID_PLACEHOLDER+"> {\n" +
             "//Just Declare your class attributes Here, as private fields\n" +
             "//The Getter and Setter Methods will be provided by Lombok\n" +
             "\n}";
@@ -46,9 +49,9 @@ public class Constants {
             "\n" +
             "import java.util.UUID;\n" +
             "@Repository\n" +
-            "public interface <Entity>"+ REPOSITORY_NAME +" extends GenericRepository<<Entity>, UUID> {\n" +
+            "public interface "+ENTITY_CC_PLACEHOLDER + REPOSITORY_NAME+" extends GenericRepository<"+ENTITY_CC_PLACEHOLDER+", "+ENTITY_ID_PLACEHOLDER+"> {\n" +
             "//All Methods to manage database already created and implemented\n" +
-            "//If you want to modify some behavior, check the methods by control + click on GenericRepository" +
+            "//If you want to modify some behavior, check the methods by control + click on GenericRepository\n" +
             "//To see the existent method and use @Override to Override it and write your own here in this class.\n" +
             "}\n";
     public static final String SERVICE_CLASS_CONTENT = "/**\n" +
@@ -64,9 +67,9 @@ public class Constants {
             "\n" +
             "import java.util.UUID;\n" +
             "@Service\n" +
-            "public class <Entity>"+ SERVICE_NAME +" extends GenericRestServiceAbstract<<Entity>, <Entity>Repository, UUID> {\n" +
+            "public class "+ENTITY_CC_PLACEHOLDER+ SERVICE_NAME +" extends GenericRestServiceAbstract<"+ENTITY_CC_PLACEHOLDER+", "+ENTITY_CC_PLACEHOLDER+REPOSITORY_NAME+", "+ENTITY_ID_PLACEHOLDER+"> {\n" +
             "//All Methods to iterate with repository are already created and implemented\n" +
-            "//If you want to modify some behavior, check the methods by control + click on GenericRestServiceAbstract" +
+            "//If you want to modify some behavior, check the methods by control + click on GenericRestServiceAbstract\n" +
             "//To see the existent methods and use @Override to Override it and write your own here in this class.\n" +
             "}\n";
     public static final String CONTROLLER_CLASS_CONTENT = "/**\n" +
@@ -83,13 +86,13 @@ public class Constants {
             "\n" +
             "import java.util.UUID;\n" +
             "@RestController\n" +
-            "@RequestMapping(\"/<entity>\")\n" +
-            "public class <Entity>"+ CONTROLLER_NAME +" extends GenericRestControllerAbstract<<Entity>, <Entity>ServiceImpl, UUID> {\n" +
-            "    public <Entity>RestController(<Entity>ServiceImpl serviceImpl) {\n" +
+            "@RequestMapping(\"/"+ENTITY_LC_PLACEHOLDER+"\")\n" +
+            "public class "+ENTITY_CC_PLACEHOLDER+CONTROLLER_NAME +" extends GenericRestControllerAbstract<"+ENTITY_CC_PLACEHOLDER+", "+ENTITY_CC_PLACEHOLDER+SERVICE_NAME+", "+ENTITY_ID_PLACEHOLDER+"> {\n" +
+            "    public "+ENTITY_CC_PLACEHOLDER+CONTROLLER_NAME+"("+ENTITY_CC_PLACEHOLDER+SERVICE_NAME+" serviceImpl) {\n" +
             "        super(serviceImpl);\n" +
             "    }\n" +
             "//All Methods to iterate with Service are already created and implemented\n" +
-            "//If you want to modify some behavior, check the methods by control + click on GenericRestServiceAbstract" +
+            "//If you want to modify some behavior, check the methods by control + click on GenericRestServiceAbstract\n" +
             "//To see the existent methods and use @Override to Override it and write your own here in this class.\n" +
             "}\n";
 }

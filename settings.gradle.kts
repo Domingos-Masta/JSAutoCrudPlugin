@@ -5,4 +5,4 @@ pluginManagement {
     }
 }
 
-rootProject.name = "SpringAutoCrudClassGenerator"
+rootProject.name = "JSAutoCrud"
