@@ -6,6 +6,8 @@ package com.isysdcore.jsautocrud.util;
  * @project SpringAutoCrudClassGenerator
  */
 public class Constants {
+    public static final String LIB_GROUP_ID = "io.github.isys-dcore";
+    public static final String LIB_ARTIFACT_ID = "generic-auto-crud";
     public static final String F_NAME_KEY = "FNAME";
     public static final String F_CONTENT_KEY = "FCONTENT";
     public static final String ENTITY_CC_PLACEHOLDER = "<ENTITY>";

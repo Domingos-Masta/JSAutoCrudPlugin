@@ -30,6 +30,8 @@ import java.util.Map;
  */
 public class GenerateClassAction extends AnAction {
 
+    private static final Logger log = LoggerFactory.getLogger(GenerateClassAction.class);
+
     @Override
     public void actionPerformed(AnActionEvent e) {
         Project project = e.getProject();
@@ -37,6 +39,13 @@ public class GenerateClassAction extends AnAction {
         ClassParameters classParameters;
         boolean sentinel;
         if (project == null) {
+            return;
+        }
+        if(!validateDependencies(project.getBasePath())){
+            Messages.showErrorDialog(project, "Error, Necessáry dependency 'io.github.isys-dcore'\n" +
+                    "and artifact 'generic-auto-crud', Was not founded in pom.xml, \n" +
+                    "please add this dependency to use this plugin.",
+                    "Dependency Error");
             return;
         }
 
@@ -112,6 +121,35 @@ public class GenerateClassAction extends AnAction {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public boolean validateDependencies(String pathToPom){
+        try {
+            // Path to the pom.xml file
+            File pomFile = new File(pathToPom + "/pom.xml");
+            // Create a document builder
+            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            Document doc = dBuilder.parse(pomFile);
+
+            // Normalize the XML structure
+            doc.getDocumentElement().normalize();
+            // Get the groupId element
+            NodeList groupIds = doc.getElementsByTagName("groupId");
+            for (int i = 0; i < groupIds.getLength(); i++){
+                if (groupIds.item(i).getTextContent().equals(Constants.LIB_GROUP_ID)){
+                    NodeList list = groupIds.item(i).getParentNode().getChildNodes();
+                    for (int j = 0; j < list.getLength(); j++) {
+                        if(list.item(j).getTextContent().equals(Constants.LIB_ARTIFACT_ID)){
+                            return true;
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            log.error("Error validating dependencies", e);
+        }
+        return false;
     }
 
     public VirtualFile getSrcFolder(Project project) {
