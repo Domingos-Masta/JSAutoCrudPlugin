@@ -19,7 +19,7 @@ Use your browser to download [zip](https://github.com/Domingos-Masta/JSAutoCrudP
 
 To use this plugin on your project, you must have our library as dependecy.
 The library cam be founded [Here](https://github.com/ISYS-Dcore/generic-auto-crud/releases/tag/v0.0.4) 
-follow the instructions to install on you local aven repository, and then import on your project.
+follow the instructions to install on you local maven repository, and then import on your project.
 
 ### Plugin in acion
 
