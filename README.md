@@ -4,13 +4,13 @@ Is a plugin to help speed generate necessary class to implmenet restfull apis wi
 
 ## Installation
 
-Use the package manager [zip](https://github.com/Domingos-Masta/JSAutoCrudPlugin/releases/tag/v0.0.5) to download.
+Use your browser to download [zip](https://github.com/Domingos-Masta/JSAutoCrudPlugin/releases/tag/v0.0.5).
 
 ```intellij IDEA
 - Go to IDE Settings
 - Go to plugins
 - Select install from disk
-- Select zip file
+- Select zip file you just Download
 ```
 
 ## Usage
