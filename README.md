@@ -7,15 +7,16 @@ Is a plugin to help speed generate necessary class to implmenet restfull apis wi
 Use the package manager [zip](https://github.com/Domingos-Masta/JSAutoCrudPlugin/releases/tag/v0.0.5) to download.
 
 ```intellij IDEA
-Go to plugins
-Select intall from disk
-Select zip file
+- Go to IDE Settings
+- Go to plugins
+- Select install from disk
+- Select zip file
 ```
 
 ## Usage
 
 ```intellij IDEA
-You Sprin Goot Priject must have https://github.com/ISYS-Dcore/generic-auto-crud/releases/tag/v0.0.4 as dependecy
+You Spring Boot project must have https://github.com/ISYS-Dcore/generic-auto-crud/releases/tag/v0.0.4 as dependecy
 Right click in project name
 First Option 'Generate JSA Classes'
 Insert Class Entity Name whithout empty spaces
