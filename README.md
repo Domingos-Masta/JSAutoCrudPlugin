@@ -26,7 +26,7 @@ follow the instructions to install on you local maven repository, and then impor
 After install and garatee the pre-requirements you are ready to fly, and speed up you development.
 
 ```intellij IDEA
-- You Spring Boot project must have https://github.com/ISYS-Dcore/generic-auto-crud/releases/tag/v0.0.4 as dependecy
+- You Spring Boot project must have https://github.com/ISYS-Dcore/generic-auto-crud/releases as dependecy
 - Right click in project name
 - First Option 'Generate JSA Classes'
 - Insert Class Entity Name whithout empty spaces
