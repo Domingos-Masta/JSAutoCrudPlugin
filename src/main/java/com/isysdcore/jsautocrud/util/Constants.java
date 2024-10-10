@@ -6,6 +6,25 @@ package com.isysdcore.jsautocrud.util;
  * @project SpringAutoCrudClassGenerator
  */
 public class Constants {
+
+    public static final String UNIDIRECTIONAL_ONE_TO_ONE = "-> ONE PARENT TO ONE CHILD";
+    public static final String UNIDIRECTIONAL_MANY_TO_ONE = "-> MANY PARENT TO ONE CHILD";
+    public static final String UNIDIRECTIONAL_ONE_TO_MANY = "-> ONE PARENT TO MANY CHILD";
+    public static final String UNIDIRECTIONAL_MANY_TO_MANY = "-> MANY PARENT TO MANY CHILD";
+    public static final String BIDIRECTIONAL_ONE_TO_ONE = "<-> ONE PARENT TO ONE CHILD";
+    public static final String BIDIRECTIONAL_ONE_TO_MANY = "<-> ONE PARENT TO MANY CHILD";
+    public static final String BIDIRECTIONAL_MANY_TO_MANY = "<-> MANY PARENT TO MANY CHILD";
+    public static final String PARENT = "PARENT";
+    public static final String CHILD = "CHILD";
+    public static final String ENTITY_PARENT_ASSOCIATION_PLACEHOLDER = "<EPAP>";
+    public static final String ENTITY_CHILD_ASSOCIATION_PLACEHOLDER = "<ECAP>";
+    public static final int PARENT_CONTAIN_CHILD = 1;
+    public static final int NOT_ASSOCIATION = 0;
+    public static final int PARENT_ALREADY_CONTAINED_AS_CHILD = -1;
+
+    public static final int RESUME_TABLE_CONTROLLER_COLUMN = 1;
+    public static final int RESUME_TABLE_SERVICE_COLUMN = 2;
+
     public static final String LIB_GROUP_ID = "io.github.isys-dcore";
     public static final String LIB_ARTIFACT_ID = "generic-auto-crud";
     public static final String F_NAME_KEY = "FNAME";
@@ -37,6 +56,8 @@ public class Constants {
             "public class "+ENTITY_CC_PLACEHOLDER+"  extends GenericEntity<"+ENTITY_ID_PLACEHOLDER+"> {\n" +
             "//Just Declare your class attributes Here, as private fields\n" +
             "//The Getter and Setter Methods will be provided by Lombok\n" +
+            ENTITY_PARENT_ASSOCIATION_PLACEHOLDER + "\n" +
+            ENTITY_CHILD_ASSOCIATION_PLACEHOLDER + "\n" +
             "\n}";
     public static final String REPOSITORY_CLASS_CONTENT = "/**\n" +
             "* This project is part of author personal assets and tools to help with productivity\n" +
@@ -97,4 +118,65 @@ public class Constants {
             "//If you want to modify some behavior, check the methods by control + click on GenericRestServiceAbstract\n" +
             "//To see the existent methods and use @Override to Override it and write your own here in this class.\n" +
             "}\n";
+
+    public static final String PARENT_ASSOCIATION_NAME_PLACEHOLDER = "<Parent>";
+    public static final String PARENT_ASSOCIATION_FIELD_NAME_PLACEHOLDER = "<parent>";
+    public static final String CHILD_ASSOCIATION_NAME_PLACEHOLDER = "<Child>";
+    public static final String CHILD_ASSOCIATION_FIELD_NAME_PLACEHOLDER = "<child>";
+
+    public static final String TEMPLATE_U_ONE_TO_ONE = "@OneToOne\n" +
+            "    @JoinColumn(name = \""+CHILD_ASSOCIATION_FIELD_NAME_PLACEHOLDER+"_id\")\n" +
+            "    private "+CHILD_ASSOCIATION_NAME_PLACEHOLDER+" "+CHILD_ASSOCIATION_FIELD_NAME_PLACEHOLDER+";\n" +
+            ENTITY_PARENT_ASSOCIATION_PLACEHOLDER + "\n" +
+            ENTITY_CHILD_ASSOCIATION_PLACEHOLDER + "\n";
+
+    public static final String TEMPLATE_U_MANY_TO_ONE = " @ManyToOne\n" +
+            "    @JoinColumn(name = \""+PARENT_ASSOCIATION_NAME_PLACEHOLDER+"_id\")\n" +
+            "    private "+PARENT_ASSOCIATION_NAME_PLACEHOLDER+" "+PARENT_ASSOCIATION_FIELD_NAME_PLACEHOLDER+";\n" +
+            ENTITY_PARENT_ASSOCIATION_PLACEHOLDER + "\n" +
+            ENTITY_CHILD_ASSOCIATION_PLACEHOLDER + "\n";
+
+    public static final String TEMPLATE_U_ONE_TO_MANY = " @OneToMany\n" +
+            "    @JoinColumn(name = \""+PARENT_ASSOCIATION_FIELD_NAME_PLACEHOLDER+"_id\")\n" +
+            "    private List<"+CHILD_ASSOCIATION_NAME_PLACEHOLDER+"> "+CHILD_ASSOCIATION_FIELD_NAME_PLACEHOLDER+"s;\n" +
+            ENTITY_PARENT_ASSOCIATION_PLACEHOLDER + "\n" +
+            ENTITY_CHILD_ASSOCIATION_PLACEHOLDER + "\n";
+
+    public static final String TEMPLATE_U_MANY_TO_MANY = "@ManyToMany\n" +
+            "    @JoinTable(name = \""+PARENT_ASSOCIATION_FIELD_NAME_PLACEHOLDER+"_"+CHILD_ASSOCIATION_FIELD_NAME_PLACEHOLDER+"\",\n" +
+            "            joinColumns = @JoinColumn(name = \""+PARENT_ASSOCIATION_FIELD_NAME_PLACEHOLDER+"_id\"),\n" +
+            "            inverseJoinColumns = @JoinColumn(name = \""+CHILD_ASSOCIATION_FIELD_NAME_PLACEHOLDER+"_id\"))\n" +
+            "    private Set<"+CHILD_ASSOCIATION_NAME_PLACEHOLDER+"> "+CHILD_ASSOCIATION_FIELD_NAME_PLACEHOLDER+"s;\n" +
+            ENTITY_PARENT_ASSOCIATION_PLACEHOLDER + "\n" +
+            ENTITY_CHILD_ASSOCIATION_PLACEHOLDER + "\n";
+
+    public static final String TEMPLATE_PARENT_B_ONE_TO_ONE = "@OneToOne(cascade = CascadeType.ALL)\n" +
+            "    @JoinColumn(name = \""+CHILD_ASSOCIATION_FIELD_NAME_PLACEHOLDER+"_id\", referencedColumnName = \"id\")\n" +
+            "    private "+CHILD_ASSOCIATION_NAME_PLACEHOLDER+" "+CHILD_ASSOCIATION_FIELD_NAME_PLACEHOLDER+";\n" +
+            ENTITY_PARENT_ASSOCIATION_PLACEHOLDER + "\n" +
+            ENTITY_CHILD_ASSOCIATION_PLACEHOLDER + "\n";
+    public static final String TEMPLATE_CHILD_B_ONE_TO_ONE = "@OneToOne(mappedBy = \""+CHILD_ASSOCIATION_FIELD_NAME_PLACEHOLDER+"\")\n" +
+            "    private "+PARENT_ASSOCIATION_NAME_PLACEHOLDER+" "+PARENT_ASSOCIATION_FIELD_NAME_PLACEHOLDER+";\n" +
+            ENTITY_PARENT_ASSOCIATION_PLACEHOLDER + "\n" +
+            ENTITY_CHILD_ASSOCIATION_PLACEHOLDER + "\n";
+
+    public static final String TEMPLATE_PARENT_B_ONE_TO_MANY = "@OneToMany(mappedBy = \""+PARENT_ASSOCIATION_FIELD_NAME_PLACEHOLDER+"\")\n" +
+            "    private List<"+CHILD_ASSOCIATION_NAME_PLACEHOLDER+"> "+CHILD_ASSOCIATION_FIELD_NAME_PLACEHOLDER+"s;";
+    public static final String TEMPLATE_CHILD_B_ONE_TO_MANY = "@ManyToOne\n" +
+            "    @JoinColumn(name = \""+PARENT_ASSOCIATION_FIELD_NAME_PLACEHOLDER+"_id\")\n" +
+            "    private "+PARENT_ASSOCIATION_NAME_PLACEHOLDER+" "+PARENT_ASSOCIATION_FIELD_NAME_PLACEHOLDER+";\n" +
+            ENTITY_PARENT_ASSOCIATION_PLACEHOLDER + "\n" +
+            ENTITY_CHILD_ASSOCIATION_PLACEHOLDER + "\n";
+
+    public static final String TEMPLATE_PARENT_B_MANY_TO_MANY = "@ManyToMany(mappedBy = \""+PARENT_ASSOCIATION_FIELD_NAME_PLACEHOLDER+"s\")\n" +
+            "    private List<"+CHILD_ASSOCIATION_NAME_PLACEHOLDER+"> "+CHILD_ASSOCIATION_FIELD_NAME_PLACEHOLDER+"s;\n" +
+            ENTITY_PARENT_ASSOCIATION_PLACEHOLDER + "\n" +
+            ENTITY_CHILD_ASSOCIATION_PLACEHOLDER + "\n";
+    public static final String TEMPLATE_CHILD_B_MANY_TO_MANY = "@ManyToMany\n" +
+            "    @JoinTable(name = \""+CHILD_ASSOCIATION_FIELD_NAME_PLACEHOLDER+"_"+PARENT_ASSOCIATION_FIELD_NAME_PLACEHOLDER+"\",\n" +
+            "        joinColumns = @JoinColumn(name = \""+CHILD_ASSOCIATION_FIELD_NAME_PLACEHOLDER+"_id\"),\n" +
+            "        inverseJoinColumns = @JoinColumn(name = \""+PARENT_ASSOCIATION_FIELD_NAME_PLACEHOLDER+"_id\"))\n" +
+            "    private List<"+PARENT_ASSOCIATION_NAME_PLACEHOLDER+"> "+PARENT_ASSOCIATION_FIELD_NAME_PLACEHOLDER+"s;\n" +
+            ENTITY_PARENT_ASSOCIATION_PLACEHOLDER + "\n" +
+            ENTITY_CHILD_ASSOCIATION_PLACEHOLDER + "\n";
 }

@@ -8,8 +8,10 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.*;
+import com.isysdcore.jsautocrud.model.ClassAssociation;
 import com.isysdcore.jsautocrud.model.ClassParameters;
-import com.isysdcore.jsautocrud.ui.ParameterDialog;
+import com.isysdcore.jsautocrud.model.ERelType;
+import com.isysdcore.jsautocrud.ui.ClassDefinitionsDialog;
 import com.isysdcore.jsautocrud.util.Constants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +22,9 @@ import org.w3c.dom.NodeList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -31,13 +35,11 @@ import java.util.Map;
 public class GenerateClassAction extends AnAction {
 
     private static final Logger log = LoggerFactory.getLogger(GenerateClassAction.class);
-
+    private List<ClassParameters> classToCreate;
     @Override
     public void actionPerformed(AnActionEvent e) {
         Project project = e.getProject();
-        ParameterDialog parameterDialog;
-        ClassParameters classParameters;
-        boolean sentinel;
+        ClassDefinitionsDialog entitiesDefinitions;
         if (project == null) {
             return;
         }
@@ -49,26 +51,23 @@ public class GenerateClassAction extends AnAction {
             return;
         }
 
-        do {
-            parameterDialog = new ParameterDialog(project);
-            parameterDialog.show();
-            classParameters = new ClassParameters(parameterDialog.getEntityNameTf(), parameterDialog.getIdDataTypes(),
-                    parameterDialog.getGenerateController(), parameterDialog.getGenerateServices());
-            sentinel = false;
-            if(parameterDialog.isOK()){
-                if (validateInParameters(classParameters, project)) {
-                    createClass(project, classParameters);
-                }else{
-                    sentinel = true;
-                }
+            entitiesDefinitions = new ClassDefinitionsDialog(project);
+            entitiesDefinitions.show();
+            if(entitiesDefinitions.isOK()){
+                classToCreate = new ArrayList<>(entitiesDefinitions.getEntitiesToCreateList());
+                classToCreate.forEach(entityClassParameters -> {
+                    createClass(project, entityClassParameters);
+                });
             }
-        } while (sentinel);
     }
 
     private void createClass(Project project, ClassParameters classParameters) {
         // Create the class content
         Map<String, String> persistClassContent = prepareFileContent(Constants.ENTITY_CLASS_CONTENT,
                 classParameters, "");
+        prepareAssociationsContent(classParameters, persistClassContent);
+        persistClassContent.replace(Constants.F_CONTENT_KEY, clearTemplate(persistClassContent));
+
         Map<String, String> repositoryContent = prepareFileContent(Constants.REPOSITORY_CLASS_CONTENT,
                 classParameters, Constants.REPOSITORY_NAME);
         Map<String, String> serviceContent = prepareFileContent(Constants.SERVICE_CLASS_CONTENT,
@@ -93,6 +92,98 @@ public class GenerateClassAction extends AnAction {
                 e.printStackTrace();
             }
         });
+    }
+
+    private void prepareAssociationsContent(ClassParameters classParameters, Map<String, String> persistClassContent) {
+        for(ClassParameters cp: classToCreate){
+            if(cp.classId() != classParameters.classId() && !cp.associations().isEmpty()){
+                for(ClassAssociation ca: cp.associations()){
+                    if(ca.childClassId() == classParameters.classId()){
+                        String newContent = replaceAssociationsPlaceHolders(persistClassContent.get(Constants.F_CONTENT_KEY),
+                                cp.className(), ca, false);
+                        persistClassContent.replace(Constants.F_CONTENT_KEY,newContent);
+                    }
+                }
+            }else {
+               if(!classParameters.associations().isEmpty()) {
+                   for(ClassAssociation ca: classParameters.associations()){
+                       String newContent = replaceAssociationsPlaceHolders(persistClassContent.get(Constants.F_CONTENT_KEY),
+                                classParameters.className(), ca, true);
+                       persistClassContent.replace(Constants.F_CONTENT_KEY,newContent);
+                   }
+               }
+            }
+        }
+    }
+
+    private String replaceAssociationsPlaceHolders(String classContent, String parent,
+                                                   ClassAssociation association, boolean isParent){
+        String content = "";
+        switch (association.eRelType()){
+            case UNIDIRECTIONAL_ONE_TO_ONE -> {
+                if(isParent){
+                    content = classContent.replace(Constants.ENTITY_PARENT_ASSOCIATION_PLACEHOLDER,
+                            Constants.TEMPLATE_U_ONE_TO_ONE);
+                }
+            }
+            case UNIDIRECTIONAL_ONE_TO_MANY -> {
+                if(isParent) {
+                    content = classContent.replace(Constants.ENTITY_PARENT_ASSOCIATION_PLACEHOLDER,
+                            Constants.TEMPLATE_U_ONE_TO_MANY);
+                }
+            }
+            case UNIDIRECTIONAL_MANY_TO_ONE -> {
+                if(isParent) {
+                    content = classContent.replace(Constants.ENTITY_PARENT_ASSOCIATION_PLACEHOLDER,
+                            Constants.TEMPLATE_U_MANY_TO_ONE);
+                }
+            }
+            case UNIDIRECTIONAL_MANY_TO_MANY -> {
+                if(isParent) {
+                    content = classContent.replace(Constants.ENTITY_PARENT_ASSOCIATION_PLACEHOLDER,
+                            Constants.TEMPLATE_U_MANY_TO_MANY);
+                }
+            }
+            case BIDIRECTIONAL_ONE_TO_ONE -> {
+                if(isParent){
+                    content = classContent.replace(Constants.ENTITY_PARENT_ASSOCIATION_PLACEHOLDER,
+                            Constants.TEMPLATE_PARENT_B_ONE_TO_ONE);
+                }else{
+                    content = classContent.replace(Constants.ENTITY_PARENT_ASSOCIATION_PLACEHOLDER,
+                            Constants.TEMPLATE_CHILD_B_ONE_TO_ONE);
+                }
+            }
+            case BIDIRECTIONAL_ONE_TO_MANY -> {
+                if(isParent){
+                    content =  classContent.replace(Constants.ENTITY_PARENT_ASSOCIATION_PLACEHOLDER,
+                            Constants.TEMPLATE_PARENT_B_ONE_TO_MANY);
+                }else{
+                    content = classContent.replace(Constants.ENTITY_PARENT_ASSOCIATION_PLACEHOLDER,
+                            Constants.TEMPLATE_CHILD_B_ONE_TO_MANY);
+                }
+            }
+            case BIDIRECTIONAL_MANY_TO_MANY -> {
+                if(isParent){
+                    content = classContent.replace(Constants.ENTITY_PARENT_ASSOCIATION_PLACEHOLDER,
+                            Constants.TEMPLATE_PARENT_B_MANY_TO_MANY);
+                }else{
+                    content = classContent.replace(Constants.ENTITY_PARENT_ASSOCIATION_PLACEHOLDER,
+                            Constants.TEMPLATE_CHILD_B_MANY_TO_MANY);
+                }
+            }
+        }
+        content = content.replace(Constants.PARENT_ASSOCIATION_NAME_PLACEHOLDER, parent);
+        content = content.replace(Constants.PARENT_ASSOCIATION_FIELD_NAME_PLACEHOLDER, parent.toLowerCase());
+        content = content.replace(Constants.CHILD_ASSOCIATION_NAME_PLACEHOLDER, association.childRelatedClass());
+        content = content.replace(Constants.CHILD_ASSOCIATION_FIELD_NAME_PLACEHOLDER, association.childRelatedClass().toLowerCase());
+        return content;
+    }
+
+    private String clearTemplate(Map<String, String> persistClassContent){
+        String tmp = persistClassContent.get(Constants.F_CONTENT_KEY);
+        tmp = tmp.replace(Constants.ENTITY_PARENT_ASSOCIATION_PLACEHOLDER, "");
+        tmp = tmp.replace(Constants.ENTITY_CHILD_ASSOCIATION_PLACEHOLDER, "");
+        return tmp;
     }
 
     public String findGroupName(String pathToPom){
@@ -164,17 +255,6 @@ public class GenerateClassAction extends AnAction {
         return null;
     }
 
-    private boolean validateInParameters(ClassParameters classParameters, Project project){
-        if(classParameters.className() == null || classParameters.className().trim().isEmpty()){
-            Messages.showErrorDialog(project, "Error, Class name can not be empty", "Class Name Error");
-            return false;
-        }else if(classParameters.className().trim().contains(" ")){
-            Messages.showErrorDialog(project, "Error, Class name can not contains empty spaces", "Class Name Error");
-            return false;
-        }
-        return true;
-    }
-
     private void generateClass(ClassParameters classParameters, Map<String, String> classContent, Project project){
         PsiFileFactory fileFactory = PsiFileFactory.getInstance(project);
         String packageName = findGroupName(project.getBasePath());
@@ -228,7 +308,7 @@ public class GenerateClassAction extends AnAction {
         fileContent.put(Constants.F_NAME_KEY, parameters.className() + suffix);
 
         String fContent = template.replace(Constants.ENTITY_CC_PLACEHOLDER, parameters.className());
-        fContent = fContent.replace(Constants.ENTITY_ID_PLACEHOLDER, parameters.idType());
+        fContent = fContent.replace(Constants.ENTITY_ID_PLACEHOLDER, parameters.idDataType());
         if(fContent.contains(Constants.ENTITY_LC_PLACEHOLDER))
             fContent = fContent.replace(Constants.ENTITY_LC_PLACEHOLDER, parameters.className().trim().toLowerCase());
         fileContent.put(Constants.F_CONTENT_KEY, fContent);
