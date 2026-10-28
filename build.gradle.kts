@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "com.isysdcore.jsautocrud"
-version = "0.1.0"
+version = "0.3.0"
 
 repositories {
     mavenCentral()
@@ -31,7 +31,7 @@ tasks {
 
     patchPluginXml {
         sinceBuild.set("232")
-        untilBuild.set("242.*")
+        untilBuild.set("262.*")
     }
 
     signPlugin {

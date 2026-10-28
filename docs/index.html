@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JSAutoCrud — IntelliJ IDEA Plugin</title>
+  <style>
+    :root {
+      --bg: #0f1115;
+      --surface: #181b21;
+      --surface-2: #20242c;
+      --text: #e6e8eb;
+      --muted: #9aa3af;
+      --accent: #4f8cff;
+      --accent-2: #7ee0a3;
+      --border: #2a2f38;
+      --radius: 14px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: radial-gradient(1200px 600px at 80% -10%, #1d2a44 0%, var(--bg) 55%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .wrap { max-width: 960px; margin: 0 auto; padding: 56px 24px 80px; }
+    header { text-align: center; margin-bottom: 40px; }
+    .logo {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 72px; height: 72px; border-radius: 18px;
+      background: linear-gradient(135deg, var(--accent), #7a5cff);
+      color: #fff; font-size: 30px; font-weight: 700;
+      box-shadow: 0 12px 30px rgba(79, 140, 255, .35);
+      margin-bottom: 20px;
+    }
+    h1 { font-size: 2.4rem; margin: 0 0 8px; letter-spacing: -.5px; }
+    .tagline { color: var(--muted); font-size: 1.1rem; max-width: 620px; margin: 0 auto; }
+    .hero-actions { margin-top: 28px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .btn {
+      display: inline-block; padding: 12px 22px; border-radius: 10px;
+      font-weight: 600; border: 1px solid var(--border); background: var(--surface-2); color: var(--text);
+    }
+    .btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .btn.primary:hover { background: #3d7df0; text-decoration: none; }
+    .card {
+      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 28px; margin: 22px 0;
+    }
+    .card h2 { margin-top: 0; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+    .feature { background: var(--surface-2); border: 1px solid var(--border); border-radius: 12px; padding: 18px; }
+    .feature strong { display: block; margin-bottom: 6px; }
+    .feature span { color: var(--muted); font-size: .95rem; }
+    pre {
+      background: #0a0c10; border: 1px solid var(--border); border-radius: 10px;
+      padding: 16px; overflow-x: auto; font-size: .9rem;
+    }
+    code { font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace; }
+    footer { text-align: center; color: var(--muted); margin-top: 48px; font-size: .9rem; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="logo">JS</div>
+      <h1>JSAutoCrud</h1>
+      <p class="tagline">Generate Spring Boot REST layers in seconds — powered by generic-auto-crud.</p>
+      <div class="hero-actions">
+        <a class="btn primary" href="https://github.com/Domingos-Masta/JSAutoCrudPlugin/releases">Download plugin</a>
+        <a class="btn" href="https://github.com/Domingos-Masta/JSAutoCrudPlugin">View on GitHub</a>
+      </div>
+    </header>
+
+    <div class="card">
+      <h2>Installation</h2>
+      <ol>
+        <li>Download the latest <code>.zip</code> from the <a href="https://github.com/Domingos-Masta/JSAutoCrudPlugin/releases">releases page</a>.</li>
+        <li>Open IntelliJ IDEA → <strong>Settings/Preferences → Plugins</strong>.</li>
+        <li>Click the gear icon → <strong>Install Plugin from Disk…</strong> and select the zip.</li>
+        <li>Restart the IDE.</li>
+      </ol>
+      <p>Your Spring Boot project must include the library:</p>
+      <pre><code>&lt;dependency&gt;
+    &lt;groupId&gt;io.github.isys-dcore&lt;/groupId&gt;
+    &lt;artifactId&gt;generic-auto-crud&lt;/artifactId&gt;
+    &lt;version&gt;0.7.5&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
+    </div>
+
+    <div class="card">
+      <h2>Features</h2>
+      <div class="grid">
+        <div class="feature"><strong>SQL &amp; MongoDB</strong><span>Generate JPA or MongoDB CRUD layers from one wizard.</span></div>
+        <div class="feature"><strong>DTO support</strong><span>DTO, mapper, DTO service and DTO controller generation.</span></div>
+        <div class="feature"><strong>Integration tests</strong><span>Ready-to-extend test classes backed by the library.</span></div>
+        <div class="feature"><strong>Entity associations</strong><span>Define JPA relationships between SQL entities.</span></div>
+        <div class="feature"><strong>Creation modes</strong><span>From scratch, from an existing entity, or a single layer.</span></div>
+        <div class="feature"><strong>Modern UI</strong><span>A clean, step-by-step wizard with a context submenu.</span></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>Usage</h2>
+      <p>Right-click the project (or any file) in the <strong>Project</strong> tool window, choose
+      <strong>AutoCRUD Resource</strong>, then pick a creation mode.</p>
+    </div>
+
+    <footer>JSAutoCrud is licensed under the MPL-2.0 license.</footer>
+  </div>
+</body>
+</html>
